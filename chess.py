@@ -84,7 +84,7 @@ while(curr_turn < 20):
     start_x, start_y = start_y ,start_x
     
 
-    ending_square = input("Enter final square:a2")
+    ending_square = input("Enter final square:")
     end_x, end_y = ending_square[0], ending_square[1]
     end_x = col_map[end_x]
     end_y = 8 - int(end_y)
