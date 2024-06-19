@@ -1,0 +1,203 @@
+import algoplay as play
+import random
+
+
+
+
+orange = play.new_image(
+    image = "Assets/P03.png",
+    x=0,
+    y=100,  
+    size = 500
+)
+
+table = play.new_image(  
+    image =  "Assets/Pozadie.png",   
+    x=0,
+    y=-200,
+    size = 300
+)
+
+start_button = play.new_image(
+    image = "Assets/startbutton.png",
+    x=0,
+    y=-50,
+    size = 50
+)
+
+obstacle1 = play.new_image(
+    image = "Assets/was.png",
+    x=400,
+    y=-76,
+    size = 300
+)
+obstacle2 = play.new_image(
+    image = "Assets/was.png",
+    x=400,
+    y=-76,
+    size = 300
+)
+obstacle3 = play.new_image(
+    image = "Assets/was.png",
+    x=400,
+    y=-76,
+    size = 300
+)
+
+trump = play.new_image(
+    image = "Assets/trump.png",
+    x=0,
+    y=0,
+    size = 120
+)
+
+end = play.new_text( 
+    words= "YOU WERE EATEN BY TRUMP, LOL",
+    font_size = 60,
+    color = "red"
+   )
+
+score = play.new_text(
+    y = -100,
+    words= "",
+    font_size = 60,
+    color = "green"
+)
+
+
+
+orange.image = "Assets/P01.png"
+obstacle1.hide()
+obstacle2.hide()
+obstacle3.hide()
+trump.hide()
+end.hide()
+score.hide()
+
+
+
+
+play.set_backdrop('light blue')
+
+
+
+table.start_physics(can_move = False, stable = True, bounciness = 0, y_speed=0,friction=0)
+#<>
+
+death = 2
+i = 3
+difficulty = 1
+@start_button.when_clicked
+async def do():
+    global death   
+    start_button.hide()
+    orange.x = -200
+    orange.y = 100
+    orange.image = "Assets/P03.png"
+    orange.start_physics(can_move = True, stable = True, bounciness = 0,friction=0)
+    await play.timer(2)
+    death = 0
+
+@play.repeat_forever
+async def animate():
+    global death
+    if death == 0:
+        global i
+            
+        await play.timer(0.1)
+        if i == 3:
+            orange.image = "Assets/P03.png"
+            i = 4                  
+        elif i == 4:
+            orange.image = "Assets/P04.png"
+            i = 3 
+
+@play.repeat_forever
+async def jump():
+    global death
+    if death == 0:
+                                   
+        if play.key_is_pressed("w"):
+            if orange.y <= -49 and orange.y >= -50:
+                n = 0                
+                while n != 20:
+                    await play.timer(0.01)
+                    orange.y += 7                    
+                    n+=1
+                
+
+@play.repeat_forever
+def collisioncheck():
+    global death
+    global difficulty
+    if orange.is_touching(obstacle1):  
+        if death == 0:     
+            death = 1
+            orange.image = "Assets/was.png"
+            score.words = "Score: ", difficulty - 1 
+            trump.show()
+            end.show()
+            score.show()
+        
+
+
+@play.repeat_forever
+async def spawnobstacles():
+    global death
+    global difficulty
+    numberofobs = 1
+    if death == 0:
+        
+        speed = 5
+        time = random.randint(5,20)/10
+        
+        if difficulty > 30:            
+            numberofobs = 3
+            
+        elif difficulty > 50:
+            speed = difficulty/10
+        elif difficulty < 30:
+            numberofobs = round(random.randint(difficulty,300)/100)
+        await play.timer(time)
+        if numberofobs == 1:
+            obstacle1.show()
+            obstacle1.x = 500
+            v = 0
+            while v != 200:
+                await play.timer(0.001)
+                obstacle1.x -= speed
+                v+=1
+            obstacle1.hide()
+        elif numberofobs == 2:
+            obstacle1.show()
+            obstacle2.show()
+            obstacle1.x = 500
+            obstacle2.x = 530
+            v = 0
+            while v != 200:
+                await play.timer(0.001)
+                obstacle1.x -= speed
+                obstacle2.x -= speed
+                v+=1
+            obstacle1.hide()
+            obstacle2.hide()
+        elif numberofobs == 3:
+            obstacle1.show()
+            obstacle2.show()
+            obstacle3.show()
+
+            obstacle1.x = 500
+            obstacle2.x = 530
+            obstacle3.x = 560
+            v = 0
+            while v != 200:
+                await play.timer(0.001)
+                obstacle1.x -= speed
+                obstacle2.x -= speed
+                obstacle3.x -= speed
+                v+=1
+            obstacle1.hide()
+            obstacle2.hide()
+            obstacle3.hide()
+        difficulty += numberofobs          
+play.start_program()
