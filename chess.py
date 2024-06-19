@@ -79,14 +79,14 @@ while(curr_turn < 20):
 
     starting_square = input("Which piece:")
     start_x, start_y = starting_square[0], starting_square[1]
-    start_x = col_map(start_x)
+    start_x = col_map[start_x]
     start_y = 8 - int(start_y)
     start_x, start_y = start_y ,start_x
     
 
-    ending_square = input("Enter final square")
+    ending_square = input("Enter final square:a2")
     end_x, end_y = ending_square[0], ending_square[1]
-    end_x = col_map(end_x)
+    end_x = col_map[end_x]
     end_y = 8 - int(end_y)
     end_x, end_y = end_y ,end_x
     
