@@ -34,8 +34,8 @@ async def another_do():
         print("Second function is called second")
         a = False
 
-print("test")
-print("hello")
+print("test2")
+
 
 # Start the program
 play.start_program()
